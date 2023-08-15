@@ -6,6 +6,12 @@ import { CreateProductDto } from '../dto/product.dto';
 
 @Injectable()
 export class ProductsService {
+  findAll() {
+    throw new Error('Method not implemented.');
+  }
+  getAllProducts() {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(Product)
     private readonly productRepo: Repository<Product>,

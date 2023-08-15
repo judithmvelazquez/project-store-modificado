@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { ProductsService } from '../services/products.service';
 import { CreateProductDto } from '../dto/product.dto';
 
@@ -6,8 +6,15 @@ import { CreateProductDto } from '../dto/product.dto';
 export class ProductsController {
   constructor(private readonly productsServices: ProductsService) {}
 
+
+  @Get()
+  findAll() {
+    return this.productsServices.findAll();
+  }
+
   @Post()
   async create(@Body() productDto: CreateProductDto) {
     return await this.productsServices.create(productDto);
+
   }
 }
