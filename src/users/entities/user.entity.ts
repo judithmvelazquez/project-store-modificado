@@ -1,7 +1,23 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { CreateUserDto } from '../dto/user.dto';
 
 @Entity()
 export class User {
+  update(id: number, CreateProductDto: any) {
+      throw new Error('Method not implemented.');
+  }
+  remove(id: number) {
+      throw new Error('Method not implemented.');
+  }
+  finOne(id: number): Promise<import("../../products/entities/product.entity").Product> {
+      throw new Error('Method not implemented.');
+  }
+  findAll() {
+      throw new Error('Method not implemented.');
+  }
+  create(usertDto: CreateUserDto) {
+      throw new Error('Method not implemented.');
+  }
   @PrimaryGeneratedColumn({ type: 'int4' })
   id: number;
 

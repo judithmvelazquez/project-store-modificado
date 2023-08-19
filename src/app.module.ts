@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
+import { MarcasModule } from './marcas/marcas.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -19,6 +20,7 @@ import { UsersModule } from './users/users.module';
     }),
     ProductsModule,
     UsersModule,
+    MarcasModule
   ],
   controllers: [AppController],
   providers: [AppService],
