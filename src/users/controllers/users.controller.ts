@@ -24,15 +24,15 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param(':id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersServices.remove(id);
   }
 
   //el metodo patch actualiza parcialmente
   //los pipes son transformadores, transforman la data
-  @Patch(':id')
+  @Patch('id')
   update(
-    @Param(':id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() createUserDto: CreateUserDto,
   ) {
     return this.usersServices.update(id, createUserDto);

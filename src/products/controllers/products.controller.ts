@@ -26,15 +26,15 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  remove(@Param(':id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.productsServices.remove(id);
   }
 
   //el metodo patch actualiza parcialmente
   //los pipes son transformadores, transforman la data
-  @Patch(':id')
+  @Patch('id')
   update(
-    @Param(':id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() CreateProductDto: CreateProductDto,
   ) {
     return this.productsServices.update(id, CreateProductDto);

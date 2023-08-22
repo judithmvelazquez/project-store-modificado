@@ -18,9 +18,20 @@ export class ProductsService {
     return product;
   }
 
-  //encotrar un producto
-  finOne(id: number){
-    return this.productRepo.findOneBy({ id });
+  //encontrar un producto
+  //finOne(id: number){
+   // return this.productRepo.findOneBy({ id });
+  //}
+
+  //Encontrar un registro con relaciones
+  finOne(id: number) {
+    return this.productRepo.findOne({
+      where:{ id },
+      relations: {
+        autor: true,
+      },
+
+    });
   }
 
   //mostrar todos los registros
