@@ -1,6 +1,7 @@
 import { User } from 'src/users/entities/user.entity';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Category } from './category.entity';
+import { Proveedor } from './proveedor.entity';
 
 @Entity()
 export class Product {
@@ -32,16 +33,25 @@ export class Product {
   created_at:Date;
 
   
-  @ManyToOne(() => Category)
-  @JoinColumn({ 
-    name: 'categoria_id' })
-  categoria: Category;
-
-
   @ManyToOne(()=> User)
   @JoinColumn({
     name: 'user_id', 
     referencedColumnName: 'id'
    })
    autor: User;
+
+   
+  @ManyToOne(() => Category)
+  @JoinColumn({ 
+    name: 'categoria_id', 
+    referencedColumnName: 'id',
+  })
+  categoria: Category;
+
+   @ManyToOne(() => Proveedor)
+  @JoinColumn({ 
+    name: 'proveedor_id',
+    referencedColumnName: 'id'
+  })
+  proveedor: Proveedor;
 }
