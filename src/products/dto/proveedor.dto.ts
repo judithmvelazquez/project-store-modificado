@@ -8,15 +8,14 @@ export class CreateProveedorDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(100)
-    proveedores: string;
+    proveedor: string;
+    
+    @IsDateString()
+    @IsOptional()
+    created_at: string;
   
     @IsNumber()
     @IsNotEmpty()
     user_id: number;
-
-     
-    @IsDateString()
-    @IsOptional()
-    created_at: Date;
   
   }

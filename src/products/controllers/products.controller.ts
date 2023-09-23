@@ -1,42 +1,37 @@
-import { Controller, Post, Body, Param, ParseIntPipe, Get, Delete, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
 import { ProductsService } from '../services/products.service';
-import { CreateProductDto } from '../dto/product.dto';
-import { get } from 'http';
-
+import { CreateProductDto } from "../dto/product.dto";
 
 @Controller('products')
-export class ProductsController {
-  constructor(private readonly productsServices: ProductsService) {}
+export class ProductController
+{
+    constructor(private readonly productsService:ProductsService){}
+    @Post()
+    async CreateProduct(@Body() createProductDto: CreateProductDto){
+        return this.productsService.create(createProductDto);
+    }
 
-  @Post()
-  async create(@Body() productDto: CreateProductDto) {
-    return await this.productsServices.create(productDto);
-  }
+    @Get()
+    findAll(){
+        return this.productsService.findAll();
+    }
 
-  @Get()
-  findAll() {
-    return this.productsServices.findAll();
+    @Get(':id')
+    findOne(@Param('id', ParseIntPipe)id: number){
+        return this.productsService.findOne(id);
+    }
+    @Delete(':id')
+    remove(@Param('id', ParseIntPipe)id: number){
+        return this.productsService.remove(id);
+    }
 
-  }
-
-  @Get(':id')
-  finOne(@Param('id', ParseIntPipe) id: number){
-    return this.productsServices.finOne(id);
-
-  }
-
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.productsServices.remove(id);
-  }
-
-  //el metodo patch actualiza parcialmente
-  //los pipes son transformadores, transforman la data
-  @Patch('id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() CreateProductDto: CreateProductDto,
-  ) {
-    return this.productsServices.update(id, CreateProductDto);
-  }
+    @Patch(':id')
+    update(
+        @Param('id', ParseIntPipe)id: number,
+        @Body()createProductDto :CreateProductDto,
+        
+    )
+    {
+        return this.productsService.update(id, createProductDto)
+    }
 }

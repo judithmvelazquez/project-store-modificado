@@ -10,20 +10,15 @@ export class CategoryService {
     @InjectRepository(Category)
     private readonly categoryRepo: Repository<Category>,
   ) {}
-//crear un registro
+
+  //crear una categoria
   async create(createCategoryDto: CreateCategoryDto) {
     const category = this.categoryRepo.create(createCategoryDto);
     await this.categoryRepo.save(category);
-
     return category;
   }
-
-  //encontrar una categoria
-  //finOne(id: number){
-   // return this.productRepo.findOneBy({ id });
-  //}
-
-  //Encontrar un registro con relaciones
+  
+  //Encontrar una categoria con relaciones a user
   finOne(id: number) {
     return this.categoryRepo.findOne({
       where:{ id },
@@ -34,7 +29,7 @@ export class CategoryService {
     });
   }
 
-  //mostrar todos los registros
+  //mostrar todos las categorias
   findAll(){
     return this.categoryRepo.find({
       order: { id: 'ASC'},
@@ -42,17 +37,17 @@ export class CategoryService {
   }
 
 
-//eliminar un registro
+//eliminar una categoria
   async remove(id: number) {
   const category = await this.finOne(id);
   await this.categoryRepo.remove(category);
-  return ' categoria eliminada satisfactoriamente' ;
+  return ' Categoria eliminada';
   }
 
   //actualizar una categoria
   async update(id: number, cambios: CreateCategoryDto) {
-    const oldprouct = await this.finOne(id);
-    const updateProduct = await this.categoryRepo.merge(oldprouct, cambios);
-    return this.categoryRepo.save(updateProduct);
+    const oldCategory = await this.finOne(id);
+    const updateCategory = await this.categoryRepo.merge(oldCategory, cambios);
+    return this.categoryRepo.save(updateCategory);
   }
 }

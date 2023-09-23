@@ -1,9 +1,9 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Product } from "./product.entity";
 import { User } from "src/users/entities/user.entity";
 
 @Entity()
 export class Category {
+
   @PrimaryGeneratedColumn({ type: 'int4' })
   id?: number;
 
