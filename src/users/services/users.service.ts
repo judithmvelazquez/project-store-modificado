@@ -1,48 +1,91 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateUserDto } from '../dto/user.dto';
+import { DataSource, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
+import { CreateUserDto } from '../dto/user.dto';
+import { UserImage } from '../entities/user-image.entity';
 
 @Injectable()
-export class UsersService {
+export class UsersService{
+    constructor(
+        @InjectRepository(User)
+        private userRepo: Repository<User>,
 
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepo: Repository<User>
-  ) {}
-//crear un registro
-  async create(createUserDto: CreateUserDto) {
-    const user = this.userRepo.create(createUserDto);
-    await this.userRepo.save(user);
+         @InjectRepository(UserImage)
+        private userImageRepo: Repository<UserImage>,
 
-    return user;
-  }
+        private readonly dataSource: DataSource,
+    ){}
 
-  //encotrar un producto
-  finOne(id: number){
-    return this.userRepo.findOneBy({ id });
-  }
+    async create (createUserDto: CreateUserDto){
+        const {images = [], ...detailUser} = createUserDto;
+        const user = await this.userRepo.create({
+            ...detailUser,
+            images:images.map((image) => this.userImageRepo.create({url:image}))
+        })
 
-  //mostrar todos los registros
-  findAll(){
-    return this.userRepo.find({
-      order: { id: 'ASC'},
-    });
-  }
+        await this.userRepo.save(user);
+        return user;
+    }
 
 
-//eliminar un registro
-  async remove(id: number) {
-  const user = await this.finOne(id);
-  await this.userRepo.remove(user);
-  return ' producto eliminado satisfactoriamente' ;
-  }
+    //Encontrar un user
+    findOne(id: number){
+        return this.userRepo.findOne({  
+            where:{id},
+            relations:{
+            images:true
+        }});
+    }
+    //mostrar todos los usuarios
+    findAll(){
+        return   this.userRepo.find({
+            order: {id: 'ASC'},
+            relations:{
+            images:true}
+        });
+    }
+    //eliminar un usuario
+    async remove(id:number){
+        const user =await this.findOne(id);
+        await this.userRepo.remove(user);
+        return 'Usuario eliminado';
+    }
 
-  //actualizar un producto
-  async update(id: number, cambios: CreateUserDto) {
-    const olduser = await this.finOne(id);
-    const updateuser = await this.userRepo.merge(olduser, cambios);
-    return this.userRepo.save(updateuser);
-  }
+    //actualizar un usuario
+    // async update(id: number, cambios: CreateUserDto){
+    //     const oldUser = await this.findOne(id);
+    //     const updateUser = await this.userRepo.merge(oldUser, cambios);
+    //     return this.userRepo.save(updateUser);
+    // }
+
+    async update(id: number, userDto: CreateUserDto){
+        const {images, ...updateAll} = userDto
+        const user = await this.userRepo.preload({
+            id:id,
+            ... updateAll
+        });
+
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+
+        if(images){
+            await queryRunner.manager.delete(UserImage, {user: {id}});
+
+            user.images = images.map((image)=>
+                this.userImageRepo.create({url: image}),
+            )
+
+        }else{
+            user.images =await this.userImageRepo.findBy({ user: {id}});
+        }
+
+        await queryRunner.manager.save(user);
+
+        await queryRunner.commitTransaction();
+        await queryRunner.release();
+
+        return user;
+    }
 }

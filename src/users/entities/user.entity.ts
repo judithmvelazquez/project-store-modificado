@@ -1,10 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { CreateUserDto } from '../dto/user.dto';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UserImage } from './user-image.entity';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn({ type: 'int4' })
-  id?: number;
+  id: number;
 
   @Column({ type: 'varchar', length: 100, nullable: false })
   name: string;
@@ -20,4 +20,9 @@ export class User {
 
   @Column({ type: 'boolean', default: true })
   active: boolean;
+
+  @OneToMany(() => UserImage, (userImage) => userImage.user, {
+    cascade : true
+  })
+  images?:UserImage[];
 }
